@@ -3,17 +3,11 @@ from sklearn.neighbors import KDTree
 
 import numpy as np
 
-sample = np.random.rand(100, 768).astype('float32')
+
+sample = np.random.rand(20000, 768).astype('float32')
 
 k=20
-KSnn = ks()
+KSnn = ks(k)
 
-indices = KSnn.knn(sample)
-
-print(indices[3])
-
-
-tree = KDTree(sample)  
-_, ind_sk = tree.query(sample, k=k)
-
-print(ind_sk[3])
+knn_indices = KSnn.knn(sample)
+snn_results = KSnn.snn(knn_indices)
