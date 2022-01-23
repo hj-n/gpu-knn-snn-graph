@@ -1,4 +1,5 @@
 from numba import cuda
+import faiss
 
 @cuda.jit
 def snn(raw_knn, snn_result, k_list, length_list):
@@ -25,20 +26,28 @@ def snn(raw_knn, snn_result, k_list, length_list):
 
 
 
-'''
-INPUT
-- data: 2D array (N, D) where N denotes the number of points and D denotes the dimensionality
-- k: k value used to compute initial knn and snn
 
-'''
 class KnnSnn:
 	
 	def __init__(self, k=20):
 		self.k=k
 
-	
-	def knn():
+
+	'''
+	INPUT
+	- data: 2D numpy array (N, D) where 
+	  - N denotes the number of points 
+		- D denotes the dimensionality
+	'''
+	def knn(self, data):
+
+		index = faiss.IndexFlatL2(data.shape[1])
+		index.add(data)
+
+		_, indices = index.search(data, self.k + 1)
+		return indices
+
+	def snn(self, matrix):
 		pass
 
-	def snn(matrix, ):
-		pass
+
